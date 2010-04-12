@@ -52,7 +52,7 @@ write proxies to the weakened PSGIServer consumer object passing along the L</se
         $self->proxied->write($self->server_context, $data);
     }
 
-=method close
+=method_public close
 
 close is proxied to the weakened PSGIServer consumer passing along L</server_context>
 
@@ -63,7 +63,7 @@ close is proxied to the weakened PSGIServer consumer passing along L</server_con
         $self->proxied->close($self->server_context);
     }
 
-=method poll_cb
+=method_public poll_cb
 
     (CodeRef $coderef)
 

@@ -56,7 +56,7 @@ This attribute stores the PSGI application to be run from this server. A writer 
 
     (ClassName $class: @args)
 
-    BUILDARGS is provided to translate from the expected Plack::Handler interface to POEx::Role::TCPServer's expected interface
+BUILDARGS is provided to translate from the expected Plack::Handler interface to POEx::Role::TCPServer's expected interface
 
 =cut
 
