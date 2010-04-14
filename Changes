@@ -1,6 +1,7 @@
 Revision history for {{ $dist->name }}: {{ $dist->version }}
 
 {{ $NEXT }}
+        BUILDARGS needs to return /all/ of the args, not just the ones Plack cares about
 
 1.101020  2010-04-12 15:39:30 America/Chicago
         Initial Release

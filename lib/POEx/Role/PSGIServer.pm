@@ -66,7 +66,7 @@ BUILDARGS is provided to translate from the expected Plack::Handler interface to
         my $hash = {};
         $hash->{listen_port} = $args{port} if exists($args{port});
         $hash->{listen_ip} = $args{host} if exists($args{host});
-        return $hash
+        return { %$hash, %args };
     }
 
 =method_protected after _start
