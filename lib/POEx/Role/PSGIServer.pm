@@ -90,11 +90,11 @@ BUILDARGS is provided to translate from the expected Plack::Handler interface to
 
     method BUILDARGS(ClassName $class: @args)
     {
-        my %args = (@args);
-        my $hash = {};
-        $hash->{listen_port} = $args{port} if exists($args{port});
-        $hash->{listen_ip} = $args{host} if exists($args{host});
-        return { %$hash, %args };
+        my %hash = @args;
+        my ($port, $ip) = delete @hash{qw(port host)};
+        $hash{listen_port} = defined $port ? $port : 5000;
+        $hash{listen_ip}   = defined $ip   ? $ip   : '0.0.0.0';
+        \%hash;
     }
 
 =method_protected after _start
