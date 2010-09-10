@@ -51,6 +51,34 @@ This attribute stores the PSGI application to be run from this server. A writer 
         writer => 'register_service',
     );
 
+=attribute_protected wheel_flushers
+
+    is: ro, isa: HashRef,
+    exists : has_wheel_flusher,
+    get    : get_wheel_flusher,
+    set    : set_wheel_flusher,
+    delete : clear_wheel_flusher
+
+This attribute stores coderefs to be called on a wheel's flush event
+(necessary to properly handle poll_cb)
+
+=cut
+
+    has wheel_flushers =>
+    (
+        is      => 'ro',
+        traits  => ['Hash'],
+        isa     => 'HashRef',
+        default => sub { {} },
+        handles =>
+        {
+            has_wheel_flusher   => 'exists',
+            get_wheel_flusher   => 'get',
+            set_wheel_flusher   => 'set',
+            clear_wheel_flusher => 'delete',
+        }
+    );
+
 
 =class_method BUILDARGS
 
@@ -384,5 +412,24 @@ run is provided to complete the Plack::Handler interface and allow the server to
         POE::Kernel->run();
     }
 
-    with 'POEx::Role::TCPServer' => {-excludes => [qw/ handle_socket_error handle_listen_error/]};
+    method handle_on_flushed(WheelID $id) is Event
+    {
+        if ($self->has_wheel_flusher($id)) {
+            $self->get_wheel_flusher($id)->();
+        }
+        1;
+    }
+
+    after delete_wheel(WheelID $id)
+    {
+        $self->clear_wheel_flusher($id);
+    }
+
+    with 'POEx::Role::TCPServer' =>
+    {
+        -excludes =>
+        [
+            qw/handle_socket_error handle_listen_error handle_on_flushed/
+        ]
+    };
 }

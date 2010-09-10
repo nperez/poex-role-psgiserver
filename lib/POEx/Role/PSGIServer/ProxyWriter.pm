@@ -73,7 +73,10 @@ poll_cb is provided to complete the interface. The first argument to $coderef wi
 
     method poll_cb(CodeRef $coderef)
     {
-        $coderef->($self);
+        my $on_flush = sub { $self->$coderef() };
+        my $id = $self->server_context->{wheel}->ID;
+        $self->proxied->set_wheel_flusher($id => $on_flush);
+        $on_flush->();
     }
 }
 1;
