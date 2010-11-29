@@ -2,7 +2,7 @@ Revision history for {{ $dist->name }}: {{ $dist->version }}
 
 {{ $NEXT }}
 
-1.103330  2010-11-29 10:03:05 America/New_York
+1.103331  2010-11-29 10:18:00 America/New_York
         Declare dependency on latest POEx::Role::TCPServer and use around for
 		BUILDARGS rather than method.
 
