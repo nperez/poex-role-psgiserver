@@ -2,6 +2,10 @@ Revision history for {{ $dist->name }}: {{ $dist->version }}
 
 {{ $NEXT }}
 
+1.103330  2010-11-29 10:03:05 America/New_York
+        Declare dependency on latest POEx::Role::TCPServer and use around for
+		BUILDARGS rather than method.
+
 1.102531  2010-09-10 13:11:09 America/Los_Angeles
         Throw some defaults on listen_ip and listen_port so we don't explode when plackup doesn't pass them to us (frodwith)
 

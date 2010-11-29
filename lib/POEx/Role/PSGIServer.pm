@@ -80,21 +80,21 @@ This attribute stores coderefs to be called on a wheel's flush event
     );
 
 
-=class_method BUILDARGS
+=class_method around BUILDARGS
 
     (ClassName $class: @args)
 
-BUILDARGS is provided to translate from the expected Plack::Handler interface to POEx::Role::TCPServer's expected interface
+BUILDARGS is wrapped to translate from the expected Plack::Handler interface to POEx::Role::TCPServer's expected interface.
 
 =cut
 
-    method BUILDARGS(ClassName $class: @args)
+    around BUILDARGS(ClassName $class: @args)
     {
-        my %hash = @args;
-        my ($port, $ip) = delete @hash{qw(port host)};
-        $hash{listen_port} = defined $port ? $port : 5000;
-        $hash{listen_ip}   = defined $ip   ? $ip   : '0.0.0.0';
-        \%hash;
+        my $hash = $class->$orig(@args);
+
+        $hash->{listen_port} ||= delete $hash->{port} || 5000;
+        $hash->{listen_ip}   ||= delete $hash->{host} || '0.0.0.0';
+        $hash;
     }
 
 =method_protected after _start
