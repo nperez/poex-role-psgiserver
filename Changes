@@ -2,6 +2,10 @@ Revision history for {{ $dist->name }}: {{ $dist->version }}
 
 {{ $NEXT }}
 
+1.103340  2010-11-30 16:03:34 America/New_York
+        Moved the code to K&R brace style to work around a stupid MXD bug
+        under 5.12 perls.  Oy ve.
+
 1.103331  2010-11-29 10:18:00 America/New_York
         Declare dependency on latest POEx::Role::TCPServer and use around for
 		BUILDARGS rather than method.
