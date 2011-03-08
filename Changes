@@ -2,6 +2,11 @@ Revision history for {{ $dist->name }}: {{ $dist->version }}
 
 {{ $NEXT }}
 
+1.110670  2011-03-08 08:02:37 America/Chicago
+        Depending on POE::Filter::HTTP::Parser 1.06 because prior versions
+        constructed their URI wrong in an edge case that Plack::Test::Suite
+        now uncovers.
+
 1.103341  2010-11-30 16:11:52 America/New_York
 
 1.103340  2010-11-30 16:03:34 America/New_York
