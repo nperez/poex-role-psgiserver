@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use FindBin;
+use lib "$FindBin::Bin/lib";
 use Test::More;
 use Test::Requires qw(POE HTTP::Parser::XS);
 
@@ -97,7 +98,10 @@ local @Plack::Test::Suite::TEST = (
 # prevent Lint middleware from being used
 Plack::Test::Suite->run_server_tests(sub {
     my($port, $app) = @_;
-    my $server = Plack::Loader->load("+POE::Component::Server::PSGI", port => $port, host => "127.0.0.1");
+    my $server = Plack::Loader->load('+MyTester',
+        port => $port,
+        host => '127.0.0.1',
+    );
     $server->run($app);
 });
 
