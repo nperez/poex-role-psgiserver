@@ -3,8 +3,7 @@ package POEx::Role::PSGIServer::Streamer;
 #ABSTRACT: Provides streaming filehandle PSGI implementation
 use MooseX::Declare;
 
-class POEx::Role::PSGIServer::Streamer
-{
+class POEx::Role::PSGIServer::Streamer {
     use POE::Filter::Map;
     use POE::Filter::Stream;
     use MooseX::Types::Moose(':all');
@@ -38,15 +37,11 @@ _build_filter is overridden to return a L<POE::Filter::Map> filter if the curren
 
 =cut
 
-    method _build_filter
-    {
-        if($self->server_context->{chunked})
-        {
-            POE::Filter::Map->new
-            (
+    method _build_filter {
+        if($self->server_context->{chunked}) {
+            POE::Filter::Map->new(
                 Get => sub { $_ },
-                Put => sub
-                { 
+                Put => sub { 
                     my $data = shift;
                     return $data if $data =~ /0\r\n\r\n/;
                     my $len = sprintf "%X", do { use bytes; length($data) };
@@ -54,8 +49,7 @@ _build_filter is overridden to return a L<POE::Filter::Map> filter if the curren
                 }
             );
         }
-        else
-        {
+        else {
             return POE::Filter::Stream->new();
         }
     }
@@ -66,10 +60,8 @@ done_writing is advised to check if the context demands a chunked terminator and
 
 =cut
 
-    around done_writing
-    {
-        if($self->server_context->{chunked} && !$self->closed_chunk)
-        {
+    around done_writing {
+        if($self->server_context->{chunked} && !$self->closed_chunk) {
             $self->closed_chunk(1);
             $self->put("0\r\n\r\n");
             return;
