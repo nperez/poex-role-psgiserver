@@ -4,8 +4,7 @@ package POEx::Types::PSGIServer;
 use warnings;
 use strict;
 
-use MooseX::Types -declare => 
-[qw/
+use MooseX::Types -declare => [qw/
     PSGIServerContext
     PSGIResponse
     PSGIBody
@@ -39,8 +38,7 @@ The context is passed around to identify the current connection and what it is e
 =cut
 
 subtype PSGIServerContext,
-    as Dict
-    [
+    as Dict [
         request => HTTPRequest,
         wheel => Optional[Wheel],
         version => Str,
@@ -68,8 +66,7 @@ This constraint uses HTTP::Status to check if the Int is a valid HTTP::Status co
 
 subtype HTTPCode,
     as Int,
-    where 
-    {
+    where {
         HTTP::Status::is_info($_) 
         || HTTP::Status::is_success($_)
         || HTTP::Status::is_redirect($_)
@@ -84,8 +81,7 @@ The PSGIBody constraint covers two of the three types of body responses valid fo
 
 subtype PSGIBody,
     as Ref,
-    where
-    {
+    where {
         Plack::Util::is_real_fh($_)
         || (Scalar::Util::blessed($_) && ($_->can('getline') && $_->can('close')))
     };
@@ -97,8 +93,7 @@ This constraint checks responses from PSGI applications for a valid HTTPCode, an
 =cut
 
 subtype PSGIResponse,
-    as Tuple
-    [
+    as Tuple [
         HTTPCode,
         ArrayRef,
         Optional[ArrayRef|PSGIBody]

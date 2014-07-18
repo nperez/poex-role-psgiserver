@@ -3,8 +3,7 @@ package POEx::Role::PSGIServer::ProxyWriter;
 #ABSTRACT: Provides a push writer for PSGI applications to use
 use MooseX::Declare;
 
-class POEx::Role::PSGIServer::ProxyWriter
-{
+class POEx::Role::PSGIServer::ProxyWriter {
     use MooseX::Types::Moose(':all');
     use POEx::Types::PSGIServer(':all');
 
@@ -16,8 +15,7 @@ This is the server context from POEx::Role::PSGIServer. It is needed to determin
 
 =cut
 
-    has server_context =>
-    (
+    has server_context => (
         is => 'ro',
         isa => PSGIServerContext,
         required => 1
@@ -31,8 +29,7 @@ This is the actual object that consumes POEx::Role::PSGIServer. It is weakened t
 
 =cut
 
-    has proxied =>
-    (
+    has proxied => (
         is => 'ro',
         isa => Object,
         weak_ref => 1,
@@ -47,8 +44,7 @@ write proxies to the weakened PSGIServer consumer object passing along the L</se
 
 =cut
 
-    method write($data)
-    {
+    method write($data) {
         $self->proxied->write($self->server_context, $data);
     }
 
@@ -58,8 +54,7 @@ close is proxied to the weakened PSGIServer consumer passing along L</server_con
 
 =cut
 
-    method close()
-    {
+    method close() {
         $self->proxied->close($self->server_context);
     }
 
@@ -71,9 +66,11 @@ poll_cb is provided to complete the interface. The first argument to $coderef wi
 
 =cut
 
-    method poll_cb(CodeRef $coderef)
-    {
-        $coderef->($self);
+    method poll_cb(CodeRef $coderef) {
+        my $on_flush = sub { $self->$coderef() };
+        my $id = $self->server_context->{wheel}->ID;
+        $self->proxied->set_wheel_flusher($id => $on_flush);
+        $on_flush->();
     }
 }
 1;
